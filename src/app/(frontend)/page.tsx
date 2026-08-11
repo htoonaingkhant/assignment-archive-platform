@@ -1,22 +1,21 @@
-import { ArrowRight, BookMarked, Search, ShieldCheck, Sparkles } from 'lucide-react'
-import Image from 'next/image'
+import { ArrowRight, BookMarked, Check, ShieldCheck, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 import { AssignmentCard } from '@/components/site/AssignmentCard'
+import { AssignmentSearch } from '@/components/site/AssignmentSearch'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { getBrowseData } from '@/lib/public-data'
+import { getBrowseData, type BrowseFilters } from '@/lib/public-data'
 
 export const dynamic = 'force-dynamic'
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>
+
 const getParam = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value)
 
 export default async function HomePage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams
-  const filters = {
+  const filters: BrowseFilters = {
     academicYear: getParam(params.year),
     major: getParam(params.major),
     query: getParam(params.q),
@@ -26,150 +25,114 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
   }
   const data = await getBrowseData(filters)
   const hasFilters = Object.values(filters).some(Boolean)
+  const activeFilters = [
+    filters.query ? `Search: ${filters.query}` : null,
+    filters.academicYear
+      ? data.academicYears.find((item) => String(item.id) === filters.academicYear)?.name
+      : null,
+    filters.major ? data.majors.find((item) => String(item.id) === filters.major)?.name : null,
+    filters.semester === 'first'
+      ? 'First semester'
+      : filters.semester === 'second'
+        ? 'Second semester'
+        : null,
+    filters.studyYear
+      ? data.studyYears.find((item) => String(item.id) === filters.studyYear)?.name
+      : null,
+    filters.subject
+      ? data.subjects.find((item) => String(item.id) === filters.subject)?.code
+      : null,
+  ].filter((value): value is string => Boolean(value))
 
   return (
     <>
-      <section className="relative overflow-hidden border-b">
-        <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block">
-          <Image
-            alt=""
-            className="object-cover opacity-30"
-            fill
-            priority
-            sizes="58vw"
-            src="/assignment-archive-social.png"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/65 to-background/10" />
-        </div>
-        <div className="absolute -right-24 top-14 size-80 rounded-full bg-accent/50 blur-3xl" />
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[1.3fr_0.7fr] lg:px-8">
-          <div className="max-w-3xl">
-            <Badge className="mb-5" variant="secondary">
-              <Sparkles /> Student knowledge, organized
-            </Badge>
-            <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.045em] sm:text-6xl">
-              Assignment answers that don&apos;t disappear in chat history.
+      <section className="relative overflow-hidden border-b-2 border-ink bg-sky">
+        <div aria-hidden="true" className="checker-strip absolute inset-x-0 top-0 h-4" />
+        <div
+          aria-hidden="true"
+          className="starburst absolute -right-10 top-16 w-28 rotate-12 bg-coral sm:right-12 sm:top-20"
+        />
+        <div
+          aria-hidden="true"
+          className="starburst absolute bottom-8 left-[-2.5rem] w-28 -rotate-12 bg-orange sm:left-12"
+        />
+        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 pb-12 pt-20 sm:px-6 sm:pb-20 sm:pt-28 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:px-8">
+          <div className="relative z-10 max-w-3xl">
+            <div className="mb-5 inline-flex items-center gap-2 border-2 border-ink bg-primary px-3 py-2 text-xs font-black uppercase tracking-[0.12em] shadow-[3px_3px_0_var(--foreground)]">
+              <Sparkles size={15} /> Student knowledge, archived
+            </div>
+            <h1 className="retro-display max-w-3xl text-[3.35rem] leading-[0.88] sm:text-7xl lg:text-8xl">
+              Answers that stay findable.
             </h1>
-            <p className="mt-6 max-w-2xl text-pretty text-lg leading-8 text-muted-foreground">
-              Browse reviewed question and answer pages by academic year, major, study year,
-              semester, and subject—without digging through old Telegram or Discord messages.
+            <p className="mt-6 max-w-xl text-base font-medium leading-7 sm:text-lg">
+              Find reviewed assignment questions and image-based solutions without digging through
+              old Telegram or Discord messages.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg">
                 <a href="#library">
                   Browse the library <ArrowRight />
                 </a>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href="/register">Create student account</Link>
-              </Button>
             </div>
           </div>
-          <div className="grid content-end gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            <div className="rounded-2xl border bg-card/80 p-5 shadow-sm backdrop-blur">
-              <ShieldCheck className="mb-5 text-primary" />
-              <p className="font-semibold">Moderator reviewed</p>
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+
+          <div className="relative z-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            <div className="retro-outline retro-shadow bg-paper p-5 sm:p-6">
+              <ShieldCheck className="mb-8" size={28} />
+              <p className="retro-display text-2xl">Moderator reviewed</p>
+              <p className="mt-2 text-sm font-medium leading-6">
                 Only published answer sets appear in the student library.
               </p>
             </div>
-            <div className="rounded-2xl border bg-primary p-5 text-primary-foreground shadow-lg shadow-primary/15">
-              <BookMarked className="mb-5" />
-              <p className="font-semibold">Ordered image pages</p>
-              <p className="mt-1 text-sm leading-6 text-primary-foreground/75">
+            <div className="retro-outline bg-coral p-5 sm:p-6">
+              <BookMarked className="mb-8" size={28} />
+              <p className="retro-display text-2xl">Ordered image pages</p>
+              <p className="mt-2 text-sm font-medium leading-6">
                 Questions and solutions stay in the intended reading order.
               </p>
             </div>
           </div>
         </div>
+        <div aria-hidden="true" className="checker-strip absolute inset-x-0 bottom-0 h-4" />
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" id="library">
-        <div className="mb-7 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8" id="library">
+        <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.16em] text-primary">Library</p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight">Find your assignment</h2>
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-coral">The archive</p>
+            <h2 className="retro-display mt-2 text-4xl leading-none sm:text-5xl">
+              Find your assignment
+            </h2>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="border-2 border-ink bg-orange px-3 py-2 text-sm font-bold shadow-[3px_3px_0_var(--foreground)]">
             {data.assignments.length} published{' '}
             {data.assignments.length === 1 ? 'assignment' : 'assignments'}
           </p>
         </div>
-        <form
-          className="mb-8 grid gap-3 rounded-2xl border bg-card p-4 shadow-sm md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[1.4fr_repeat(5,1fr)_auto]"
-          method="GET"
-        >
-          <div className="relative">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              size={17}
-            />
-            <Input
-              className="pl-9"
-              defaultValue={filters.query}
-              name="q"
-              placeholder="Title or subject…"
-            />
+
+        <AssignmentSearch data={data} filters={filters} key={JSON.stringify(filters)} />
+
+        {activeFilters.length > 0 && (
+          <div className="mb-8 flex flex-wrap items-center gap-2" aria-label="Active filters">
+            <span className="mr-1 text-xs font-black uppercase tracking-[0.12em]">Showing</span>
+            {activeFilters.map((filter) => (
+              <span
+                className="inline-flex items-center gap-1 border-2 border-ink bg-primary px-2 py-1 text-xs font-bold"
+                key={filter}
+              >
+                <Check size={13} /> {filter}
+              </span>
+            ))}
+            <Link
+              className="ml-1 text-xs font-black uppercase underline underline-offset-4"
+              href="/"
+            >
+              Clear all
+            </Link>
           </div>
-          <select
-            className="h-9 rounded-md border bg-background px-3 text-sm"
-            defaultValue={filters.academicYear ?? ''}
-            name="year"
-          >
-            <option value="">All years</option>
-            {data.academicYears.map((year) => (
-              <option key={year.id} value={year.id}>
-                {year.name}
-              </option>
-            ))}
-          </select>
-          <select
-            className="h-9 rounded-md border bg-background px-3 text-sm"
-            defaultValue={filters.major ?? ''}
-            name="major"
-          >
-            <option value="">All majors</option>
-            {data.majors.map((major) => (
-              <option key={major.id} value={major.id}>
-                {major.name}
-              </option>
-            ))}
-          </select>
-          <select
-            className="h-9 rounded-md border bg-background px-3 text-sm"
-            defaultValue={filters.semester ?? ''}
-            name="semester"
-          >
-            <option value="">Both semesters</option>
-            <option value="first">First semester</option>
-            <option value="second">Second semester</option>
-          </select>
-          <select
-            className="h-9 rounded-md border bg-background px-3 text-sm"
-            defaultValue={filters.studyYear ?? ''}
-            name="studyYear"
-          >
-            <option value="">All study years</option>
-            {data.studyYears.map((studyYear) => (
-              <option key={studyYear.id} value={studyYear.id}>
-                {studyYear.name}
-              </option>
-            ))}
-          </select>
-          <select
-            className="h-9 rounded-md border bg-background px-3 text-sm"
-            defaultValue={filters.subject ?? ''}
-            name="subject"
-          >
-            <option value="">All subjects</option>
-            {data.subjects.map((subject) => (
-              <option key={subject.id} value={subject.id}>
-                {subject.code} · {subject.name}
-              </option>
-            ))}
-          </select>
-          <Button type="submit">Search</Button>
-        </form>
+        )}
+
         {!data.available && (
           <Alert className="mb-8">
             <BookMarked />
@@ -180,25 +143,26 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
             </AlertDescription>
           </Alert>
         )}
+
         {data.assignments.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
             {data.assignments.map((assignment) => (
               <AssignmentCard assignment={assignment} key={assignment.id} />
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed bg-card/50 px-6 py-16 text-center">
-            <BookMarked className="mx-auto text-muted-foreground" size={38} strokeWidth={1.5} />
-            <h3 className="mt-4 text-lg font-semibold">
+          <div className="retro-outline bg-paper px-6 py-16 text-center shadow-[4px_4px_0_var(--foreground)]">
+            <BookMarked className="mx-auto" size={38} strokeWidth={1.5} />
+            <h3 className="retro-display mt-5 text-3xl">
               {hasFilters ? 'No assignments match those filters' : 'No assignments published yet'}
             </h3>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
+            <p className="mx-auto mt-3 max-w-md text-sm font-medium leading-6 text-muted-foreground">
               {hasFilters
                 ? 'Try removing one or more filters to broaden your search.'
                 : 'A moderator can publish the first reviewed question and answer set from the CMS.'}
             </p>
             {hasFilters && (
-              <Button asChild className="mt-5" variant="outline">
+              <Button asChild className="mt-6" variant="outline">
                 <Link href="/">Clear filters</Link>
               </Button>
             )}

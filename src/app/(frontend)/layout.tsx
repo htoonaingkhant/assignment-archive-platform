@@ -30,10 +30,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SiteHeader />
         <main>{children}</main>
-        <footer className="border-t bg-card/60">
-          <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-            <p>Assignment Archive · Built for students who need answers that stay findable.</p>
-            <p>Questions and solutions are reviewed by moderators.</p>
+        <footer className="border-t-2 border-ink bg-coral">
+          <div aria-hidden="true" className="checker-strip h-3" />
+          <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-8 text-sm font-bold sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+            <p>Assignment Archive · Answers that stay findable.</p>
+            <p>Reviewed by moderators.</p>
           </div>
         </footer>
         <Toaster richColors />

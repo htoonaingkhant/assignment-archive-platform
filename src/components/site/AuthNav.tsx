@@ -2,7 +2,7 @@
 
 import { LogOut, UserRound } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,7 @@ type CurrentUser = {
 }
 
 export function AuthNav() {
+  const pathname = usePathname()
   const router = useRouter()
   const [user, setUser] = useState<CurrentUser | null>(null)
 
@@ -26,16 +27,19 @@ export function AuthNav() {
       })
       .then(setUser)
       .catch(() => setUser(null))
-  }, [])
+  }, [pathname])
 
   if (!user) {
     return (
       <nav className="flex items-center gap-2" aria-label="Account navigation">
-        <Button asChild size="sm" variant="ghost">
+        <Button asChild className="hidden sm:inline-flex" size="sm" variant="ghost">
           <Link href="/login">Log in</Link>
         </Button>
-        <Button asChild size="sm">
-          <Link href="/register">Create account</Link>
+        <Button asChild className="px-3 sm:px-4" size="sm">
+          <Link href="/register">
+            <span className="sm:hidden">Join</span>
+            <span className="hidden sm:inline">Create account</span>
+          </Link>
         </Button>
       </nav>
     )
@@ -43,10 +47,10 @@ export function AuthNav() {
 
   return (
     <nav className="flex items-center gap-2" aria-label="Account navigation">
-      <Button asChild size="sm" variant="ghost">
+      <Button asChild className="px-3 sm:px-4" size="sm" variant="ghost">
         <Link href="/account">
           <UserRound />
-          <span className="hidden sm:inline">{user.username}</span>
+          <span className="hidden max-w-28 truncate sm:inline">{user.username}</span>
         </Link>
       </Button>
       <Button

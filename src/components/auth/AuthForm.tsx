@@ -65,7 +65,9 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
         </Alert>
       )}
       <div className="space-y-2">
-        <Label htmlFor="username">Username</Label>
+        <Label className="font-black uppercase tracking-[0.08em]" htmlFor="username">
+          Username
+        </Label>
         <Input
           autoComplete="username"
           id="username"
@@ -82,7 +84,9 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
         )}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label className="font-black uppercase tracking-[0.08em]" htmlFor="password">
+          Password
+        </Label>
         <div className="relative">
           <Input
             autoComplete={isRegister ? 'new-password' : 'current-password'}
@@ -96,7 +100,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
           />
           <button
             aria-label={showPassword ? 'Hide password' : 'Show password'}
-            className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-muted-foreground hover:text-foreground"
+            className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-muted-foreground hover:text-foreground"
             onClick={() => setShowPassword((value) => !value)}
             type="button"
           >
@@ -111,7 +115,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
       <p className="text-center text-sm text-muted-foreground">
         {isRegister ? 'Already have an account?' : 'New to the archive?'}{' '}
         <Link
-          className="font-medium text-primary hover:underline"
+          className="font-black text-foreground underline decoration-coral decoration-2 underline-offset-4 hover:text-coral"
           href={isRegister ? '/login' : '/register'}
         >
           {isRegister ? 'Log in' : 'Create account'}

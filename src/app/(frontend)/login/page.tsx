@@ -14,13 +14,23 @@ export default async function LoginPage({
 }) {
   const params = await searchParams
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-8rem)] max-w-7xl items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md shadow-xl shadow-primary/5">
-        <CardHeader>
-          <CardTitle className="text-2xl">Welcome back</CardTitle>
-          <CardDescription>Log in with your Assignment Archive username.</CardDescription>
+    <div className="relative mx-auto flex min-h-[calc(100vh-5rem)] max-w-7xl items-center justify-center overflow-hidden px-4 py-12 sm:px-6">
+      <div
+        aria-hidden="true"
+        className="starburst absolute -left-8 top-20 w-24 bg-orange sm:left-16"
+      />
+      <Card className="relative w-full max-w-md rounded-none border-2 border-ink bg-paper shadow-[6px_6px_0_var(--foreground)]">
+        <div aria-hidden="true" className="checker-strip absolute inset-x-0 top-0 h-3" />
+        <CardHeader className="px-5 pb-5 pt-9 sm:px-7">
+          <p className="mb-3 text-xs font-black uppercase tracking-[0.16em] text-coral">
+            Student access
+          </p>
+          <CardTitle className="retro-display text-4xl leading-none">Welcome back</CardTitle>
+          <CardDescription className="mt-2 font-medium">
+            Log in with your Assignment Archive username.
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-5 sm:px-7">
           {params.registered && (
             <Alert className="mb-5">
               <CheckCircle2 />

@@ -14,50 +14,50 @@ export function AssignmentCard({ assignment }: { assignment: Assignment }) {
   const totalPages = assignment.questionImages.length + assignment.answerImages.length
 
   return (
-    <Card className="group overflow-hidden border-border/80 bg-card/90 py-0 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10">
+    <Card className="group overflow-hidden rounded-none border-2 border-ink bg-paper py-0 shadow-[5px_5px_0_var(--foreground)] transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[7px_7px_0_var(--foreground)] motion-reduce:transform-none">
       <Link className="block" href={`/assignments/${assignment.id}`}>
-        <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+        <div className="relative aspect-[16/10] overflow-hidden border-b-2 border-ink bg-sky">
           {preview?.secureUrl ? (
             <Image
               alt={preview.alt}
-              className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+              className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03] motion-reduce:transform-none"
               fill
               src={preview.secureUrl}
               unoptimized
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground">
+            <div className="flex h-full items-center justify-center text-ink">
               <FileImage size={36} strokeWidth={1.5} />
             </div>
           )}
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/50 to-transparent" />
-          <Badge className="absolute right-3 top-3 bg-background/90 text-foreground backdrop-blur">
+          <div aria-hidden="true" className="absolute bottom-3 left-3 h-3 w-16 bg-coral" />
+          <Badge className="absolute right-3 top-3 bg-paper">
             {semesterSubject?.semester === 'second' ? 'Second semester' : 'First semester'}
           </Badge>
         </div>
       </Link>
       <CardHeader className="space-y-3 px-5 pt-5">
-        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.12em] text-primary">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-black uppercase tracking-[0.1em] text-coral">
           <span>{subject?.code ?? 'Subject'}</span>
-          <span className="text-border">/</span>
+          <span className="text-ink">/</span>
           <span>{major?.name ?? 'Major'}</span>
-          <span className="text-border">/</span>
+          <span className="text-ink">/</span>
           <span>{studyYear?.name ?? 'Study year'}</span>
         </div>
         <Link href={`/assignments/${assignment.id}`}>
-          <h2 className="line-clamp-2 text-lg font-semibold leading-snug tracking-tight transition group-hover:text-primary">
+          <h2 className="line-clamp-2 text-xl font-black leading-snug tracking-tight transition group-hover:text-coral">
             {assignment.title}
           </h2>
         </Link>
       </CardHeader>
-      <CardContent className="px-5 text-sm text-muted-foreground">
+      <CardContent className="px-5 text-sm font-medium text-muted-foreground">
         {subject?.name ?? 'Assignment solution'}
       </CardContent>
-      <CardFooter className="flex justify-between border-t px-5 py-4 text-sm text-muted-foreground">
-        <span className="inline-flex items-center gap-1.5">
+      <CardFooter className="flex flex-wrap justify-between gap-2 border-t-2 border-ink px-5 py-4 text-xs font-bold text-muted-foreground">
+        <span className="inline-flex items-center gap-1.5 uppercase tracking-[0.06em]">
           <Layers3 size={15} /> {totalPages} pages
         </span>
-        <span className="inline-flex items-center gap-1 font-medium text-foreground">
+        <span className="inline-flex items-center gap-1 font-black text-foreground">
           {academicYear?.name ?? 'Academic year'} <ArrowUpRight size={15} />
         </span>
       </CardFooter>
