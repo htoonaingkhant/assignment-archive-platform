@@ -8,7 +8,8 @@ import { getAssignmentContext, getMediaDocument } from '@/lib/public-data'
 import type { Assignment } from '@/payload-types'
 
 export function AssignmentCard({ assignment }: { assignment: Assignment }) {
-  const { academicYear, major, semesterSubject, subject } = getAssignmentContext(assignment)
+  const { academicYear, major, semesterSubject, studyYear, subject } =
+    getAssignmentContext(assignment)
   const preview = getMediaDocument(assignment.questionImages[0]?.image)
   const totalPages = assignment.questionImages.length + assignment.answerImages.length
 
@@ -40,6 +41,8 @@ export function AssignmentCard({ assignment }: { assignment: Assignment }) {
           <span>{subject?.code ?? 'Subject'}</span>
           <span className="text-border">/</span>
           <span>{major?.name ?? 'Major'}</span>
+          <span className="text-border">/</span>
+          <span>{studyYear?.name ?? 'Study year'}</span>
         </div>
         <Link href={`/assignments/${assignment.id}`}>
           <h2 className="line-clamp-2 text-lg font-semibold leading-snug tracking-tight transition group-hover:text-primary">

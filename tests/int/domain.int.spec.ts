@@ -2,6 +2,7 @@ import type { PayloadRequest } from 'payload'
 import { describe, expect, it } from 'vitest'
 
 import { getRole, isAdmin, isStaff } from '@/access/roles'
+import { StudyYears } from '@/collections/StudyYears'
 import { MAX_IMAGE_SIZE } from '@/lib/media-constants'
 
 const userWithRole = (role: 'student' | 'moderator' | 'admin') => {
@@ -25,5 +26,10 @@ describe('assignment archive domain rules', () => {
 
   it('uses a five-megabyte image limit', () => {
     expect(MAX_IMAGE_SIZE).toBe(5 * 1024 * 1024)
+  })
+
+  it('manages study years as their own collection', () => {
+    expect(StudyYears.slug).toBe('study-years')
+    expect(StudyYears.admin?.useAsTitle).toBe('name')
   })
 })

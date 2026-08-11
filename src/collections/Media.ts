@@ -55,6 +55,7 @@ export const Media: CollectionConfig = {
   admin: {
     defaultColumns: ['alt', 'originalFilename', 'bytes', 'updatedAt'],
     group: 'Assignment Library',
+    hidden: true,
     useAsTitle: 'alt',
   },
   access: {
@@ -65,15 +66,6 @@ export const Media: CollectionConfig = {
   },
   hooks: { beforeValidate: [validateCloudinaryAsset] },
   fields: [
-    {
-      name: 'cloudinaryUploader',
-      type: 'ui',
-      admin: {
-        components: {
-          Field: '@/components/admin/CloudinaryUploader#CloudinaryUploader',
-        },
-      },
-    },
     {
       name: 'alt',
       type: 'text',

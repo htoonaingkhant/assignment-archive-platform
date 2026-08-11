@@ -70,6 +70,7 @@ export interface Config {
     users: User
     'academic-years': AcademicYear
     majors: Major
+    'study-years': StudyYear
     subjects: Subject
     'semester-subjects': SemesterSubject
     media: Media
@@ -84,6 +85,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>
     'academic-years': AcademicYearsSelect<false> | AcademicYearsSelect<true>
     majors: MajorsSelect<false> | MajorsSelect<true>
+    'study-years': StudyYearsSelect<false> | StudyYearsSelect<true>
     subjects: SubjectsSelect<false> | SubjectsSelect<true>
     'semester-subjects': SemesterSubjectsSelect<false> | SemesterSubjectsSelect<true>
     media: MediaSelect<false> | MediaSelect<true>
@@ -159,6 +161,9 @@ export interface User {
  */
 export interface AcademicYear {
   id: number
+  /**
+   * The calendar-based school period only, for example 2026–2027. First Year and Second Year are selected later in Semester Subjects.
+   */
   name: string
   isActive?: boolean | null
   updatedAt: string
@@ -170,11 +175,30 @@ export interface AcademicYear {
  */
 export interface Major {
   id: number
+  /**
+   * The reusable major name only, for example Mathematics. Do not include First Year or Second Year here.
+   */
   name: string
   /**
    * Optional short code, for example MATH.
    */
   code?: string | null
+  updatedAt: string
+  createdAt: string
+}
+/**
+ * Student levels inside a major, such as First Year, Second Year, or Honours Year.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "study-years".
+ */
+export interface StudyYear {
+  id: number
+  name: string
+  /**
+   * Controls display order. Example: First Year = 1, Second Year = 2.
+   */
+  sortOrder: number
   updatedAt: string
   createdAt: string
 }
@@ -196,8 +220,18 @@ export interface Subject {
 export interface SemesterSubject {
   id: number
   displayName?: string | null
+  /**
+   * Calendar period, for example 2026–2027.
+   */
   academicYear: number | AcademicYear
+  /**
+   * Major only, for example Mathematics.
+   */
   major: number | Major
+  /**
+   * The student level inside this major and academic year, for example First Year Mathematics.
+   */
+  studyYear: number | StudyYear
   semester: 'first' | 'second'
   subject: number | Subject
   updatedAt: string
@@ -231,14 +265,14 @@ export interface Assignment {
   semesterSubject: number | SemesterSubject
   status: 'draft' | 'published'
   /**
-   * Drag rows to arrange the question pages in reading order.
+   * Add a row for each question page, upload the image here, then drag rows into reading order.
    */
   questionImages: {
     image: number | Media
     id?: string | null
   }[]
   /**
-   * Drag rows to arrange the answer pages in reading order.
+   * Add a row for each answer page, upload the image here, then drag rows into reading order.
    */
   answerImages: {
     image: number | Media
@@ -285,6 +319,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'majors'
         value: number | Major
+      } | null)
+    | ({
+        relationTo: 'study-years'
+        value: number | StudyYear
       } | null)
     | ({
         relationTo: 'subjects'
@@ -390,6 +428,16 @@ export interface MajorsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "study-years_select".
+ */
+export interface StudyYearsSelect<T extends boolean = true> {
+  name?: T
+  sortOrder?: T
+  updatedAt?: T
+  createdAt?: T
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "subjects_select".
  */
 export interface SubjectsSelect<T extends boolean = true> {
@@ -406,6 +454,7 @@ export interface SemesterSubjectsSelect<T extends boolean = true> {
   displayName?: T
   academicYear?: T
   major?: T
+  studyYear?: T
   semester?: T
   subject?: T
   updatedAt?: T

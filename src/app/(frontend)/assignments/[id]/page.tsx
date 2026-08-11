@@ -22,7 +22,8 @@ export default async function AssignmentPage({ params }: PageProps) {
   const { id } = await params
   const assignment = await getPublishedAssignment(Number(id))
   if (!assignment) notFound()
-  const { academicYear, major, semesterSubject, subject } = getAssignmentContext(assignment)
+  const { academicYear, major, semesterSubject, studyYear, subject } =
+    getAssignmentContext(assignment)
   const groups = [
     { icon: FileQuestion, items: assignment.questionImages, label: 'Question pages' },
     { icon: GraduationCap, items: assignment.answerImages, label: 'Answer pages' },
@@ -41,6 +42,7 @@ export default async function AssignmentPage({ params }: PageProps) {
           <Badge variant="secondary">
             {semesterSubject?.semester === 'second' ? 'Second semester' : 'First semester'}
           </Badge>
+          <Badge variant="outline">{studyYear?.name ?? 'Study year'}</Badge>
         </div>
         <h1 className="mt-5 text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-5xl">
           {assignment.title}
@@ -52,7 +54,7 @@ export default async function AssignmentPage({ params }: PageProps) {
             <CalendarDays size={16} /> {academicYear?.name}
           </span>
           <span className="inline-flex items-center gap-2">
-            <GraduationCap size={16} /> {major?.name}
+            <GraduationCap size={16} /> {studyYear?.name ?? 'Study year'} · {major?.name}
           </span>
           <span>
             {assignment.questionImages.length} question pages · {assignment.answerImages.length}{' '}

@@ -12,6 +12,7 @@ import { Assignments } from './collections/Assignments'
 import { Majors } from './collections/Majors'
 import { SemesterSubjects } from './collections/SemesterSubjects'
 import { Subjects } from './collections/Subjects'
+import { StudyYears } from './collections/StudyYears'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -27,7 +28,16 @@ export default buildConfig({
       titleSuffix: '— Assignment Archive',
     },
   },
-  collections: [Users, AcademicYears, Majors, Subjects, SemesterSubjects, Media, Assignments],
+  collections: [
+    Users,
+    AcademicYears,
+    Majors,
+    StudyYears,
+    Subjects,
+    SemesterSubjects,
+    Media,
+    Assignments,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

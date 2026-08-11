@@ -1,8 +1,8 @@
 # Assignment Archive
 
 A searchable, moderated school assignment archive. Students browse published question and
-answer images by academic year, major, semester, and subject. Moderators manage content in
-Payload CMS, Supabase PostgreSQL stores application data, and Cloudinary stores image files.
+answer images by academic year, major, study year, semester, and subject. Moderators manage
+content in Payload CMS, Supabase PostgreSQL stores application data, and Cloudinary stores files.
 
 ## Stack
 
@@ -25,8 +25,12 @@ Payload CMS, Supabase PostgreSQL stores application data, and Cloudinary stores 
    ```
 
 4. Open `http://localhost:3000/admin`. The first user created there becomes the admin.
-5. Create academic years, majors, subjects, semester-subject links, media records, and then
-   assignments. Drag question and answer rows into their intended reading order.
+5. Create academic years, majors, study years, subjects, semester-subject links, and then
+   assignments. Academic year is the calendar period (`2026–2027`). Study Years has its own CRUD,
+   where `name` can be `First Year` and display order can be `1`; select that record on the
+   semester-subject.
+6. Add question and answer rows inside Assignment, upload each image there, and drag the rows
+   into their intended reading order. Media records are created automatically.
 
 For an optional local PostgreSQL database, run `docker compose up -d postgres` and use:
 
@@ -36,10 +40,11 @@ DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/assignment
 
 ## Cloudinary upload flow
 
-The image never passes through Vercel's temporary filesystem. A moderator chooses an image in
-Payload Admin, the app returns a short-lived signed upload payload, and the browser uploads the
-file directly to Cloudinary. Payload then verifies the Cloudinary asset and stores only its URL,
-public ID, dimensions, MIME type, and byte size in PostgreSQL.
+The image never passes through Vercel's temporary filesystem. A moderator chooses an image in an
+Assignment question or answer row, the app returns a short-lived signed upload payload, and the
+browser uploads the file directly to Cloudinary. Payload verifies the asset, creates the hidden
+Media record, links it to the row, and stores only its URL, public ID, dimensions, MIME type, and
+byte size in PostgreSQL.
 
 Uploads are image-only and limited to 5 MB in both the browser and Payload validation. Automatic
 compression is intentionally out of scope. Media deletion is disabled in this MVP so files and

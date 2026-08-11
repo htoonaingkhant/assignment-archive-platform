@@ -13,17 +13,19 @@ const getRelationshipID = (value: unknown) => {
 const setDisplayName: CollectionBeforeChangeHook = async ({ data, req }) => {
   const academicYearID = getRelationshipID(data.academicYear)
   const majorID = getRelationshipID(data.major)
+  const studyYearID = getRelationshipID(data.studyYear)
   const subjectID = getRelationshipID(data.subject)
 
-  if (!academicYearID || !majorID || !subjectID || !data.semester) return data
+  if (!academicYearID || !majorID || !studyYearID || !subjectID || !data.semester) return data
 
-  const [academicYear, major, subject] = await Promise.all([
+  const [academicYear, major, studyYear, subject] = await Promise.all([
     req.payload.findByID({ collection: 'academic-years', id: academicYearID, req }),
     req.payload.findByID({ collection: 'majors', id: majorID, req }),
+    req.payload.findByID({ collection: 'study-years', id: studyYearID, req }),
     req.payload.findByID({ collection: 'subjects', id: subjectID, req }),
   ])
 
-  data.displayName = `${academicYear.name} · ${major.name} · ${data.semester === 'first' ? 'First' : 'Second'} · ${subject.code}`
+  data.displayName = `${academicYear.name} · ${major.name} · ${studyYear.name} · ${data.semester === 'first' ? 'First Semester' : 'Second Semester'} · ${subject.code}`
 
   return data
 }
@@ -31,7 +33,7 @@ const setDisplayName: CollectionBeforeChangeHook = async ({ data, req }) => {
 export const SemesterSubjects: CollectionConfig = {
   slug: 'semester-subjects',
   admin: {
-    defaultColumns: ['displayName', 'semester', 'updatedAt'],
+    defaultColumns: ['displayName', 'studyYear', 'semester', 'updatedAt'],
     group: 'Academic Structure',
     useAsTitle: 'displayName',
   },
@@ -43,7 +45,7 @@ export const SemesterSubjects: CollectionConfig = {
   },
   indexes: [
     {
-      fields: ['academicYear', 'major', 'semester', 'subject'],
+      fields: ['academicYear', 'major', 'studyYear', 'semester', 'subject'],
       unique: true,
     },
   ],
@@ -61,13 +63,30 @@ export const SemesterSubjects: CollectionConfig = {
     {
       name: 'academicYear',
       type: 'relationship',
+      admin: {
+        description: 'Calendar period, for example 2026–2027.',
+      },
       relationTo: 'academic-years',
       required: true,
     },
     {
       name: 'major',
       type: 'relationship',
+      admin: {
+        description: 'Major only, for example Mathematics.',
+      },
       relationTo: 'majors',
+      required: true,
+    },
+    {
+      name: 'studyYear',
+      type: 'relationship',
+      admin: {
+        description:
+          'The student level inside this major and academic year, for example First Year Mathematics.',
+      },
+      label: 'Study year',
+      relationTo: 'study-years',
       required: true,
     },
     {

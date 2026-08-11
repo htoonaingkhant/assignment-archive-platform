@@ -19,6 +19,11 @@ export const Majors: CollectionConfig = {
     {
       name: 'name',
       type: 'text',
+      admin: {
+        description:
+          'The reusable major name only, for example Mathematics. Do not include First Year or Second Year here.',
+        placeholder: 'Mathematics',
+      },
       required: true,
       unique: true,
     },

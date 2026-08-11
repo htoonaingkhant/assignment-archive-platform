@@ -111,7 +111,8 @@ Password reset is admin-managed for the MVP.
 ## Image Upload and Storage
 
 - Actual assignment image files belong in Cloudinary, not the Vercel local filesystem.
-- Moderator uploads must go through the Payload Admin upload flow and the Cloudinary integration.
+- Moderator uploads must happen inline inside Assignment question/answer rows through the
+  Cloudinary integration. Media records are created automatically and hidden from CMS navigation.
 - Store Cloudinary public ID, secure URL, file metadata, image type, and display order in Payload.
 - Keep question images and answer images as separate ordered groups.
 - Allowed upload type is image-only.
@@ -129,16 +130,19 @@ The academic hierarchy is:
 ```text
 AcademicYear
  └── Major
-      └── Semester: First | Second
-           └── SemesterSubject
+      └── Study Year (CRUD-managed record)
+           └── Semester: First | Second
+                └── SemesterSubject
                 └── Subject
                      └── Assignment
                           ├── Question Images [ordered]
                           └── Answer Images [ordered]
 ```
 
-Subject records contain `name` and `code`. A reusable Subject may be linked to both semesters
-through `SemesterSubject`; do not duplicate Subject records for each semester.
+Academic Year means the calendar period such as `2026–2027`; Study Year is a CRUD-managed record
+such as `First Year`, `Second Year`, or `Honours Year`. Subject records contain `name` and `code`.
+A reusable Subject may be linked to multiple study years and semesters through
+`SemesterSubject`; do not duplicate Subject records.
 
 Assignments contain at least:
 
@@ -194,7 +198,7 @@ Do not hand-edit generated files unless the Payload documentation explicitly req
 
 ## Public Site Behavior
 
-- Public users can browse by academic year, major, semester, and subject.
+- Public users can browse by academic year, major, study year, semester, and subject.
 - Only published assignments appear publicly.
 - Assignment detail pages show question images first and answer images second.
 - Images must render in their stored order.

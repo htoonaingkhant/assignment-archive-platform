@@ -33,8 +33,9 @@ Build a school assignment archive with:
 ```text
 AcademicYear
  └── Major
-      └── Semester: First | Second
-           └── SemesterSubject
+      └── Study Year (CRUD-managed record)
+           └── Semester: First | Second
+                └── SemesterSubject
                 └── Subject
                      └── Assignment
                           ├── Question Images [ordered]
@@ -46,8 +47,11 @@ AcademicYear
 - `name`
 - `code`
 
-The same Subject record can be connected to both semesters through `SemesterSubject`.
-Semester is restricted to two values: `first` and `second`.
+`AcademicYear` is the calendar period, for example `2026–2027`. `StudyYear` is its own collection
+with `name` and `sortOrder`, so admins can create levels such as First Year, Second Year, or
+Honours Year without a code change. `SemesterSubject.studyYear` is a relationship to that
+collection. The same Subject record can be connected to multiple study years and both semesters.
+Semester remains restricted to two values: `first` and `second`.
 
 ### Assignment
 
@@ -74,14 +78,17 @@ Required MVP content is subject, title, question images, and answer images.
 
 ## Image Storage Flow
 
-Moderator uploads from the Payload `/admin` interface.
+Moderator uploads directly inside the Assignment create/edit form. The Media collection remains
+an internal metadata store and is hidden from CMS navigation.
 
 ```text
-Moderator selects image
+Moderator adds a question or answer page row in Assignment
         ↓
-Payload upload integration
+Inline uploader requests a signed upload
         ↓
 Cloudinary stores the actual image
+        ↓
+Payload creates the hidden Media record and links it to the row
         ↓
 Supabase/Postgres stores URL, public ID, metadata, and display order
 ```
@@ -158,6 +165,7 @@ Secrets must remain server-side and must not be exposed through public client va
 - Moderator can create, edit, and publish an assignment.
 - Admin can manage academic data and staff accounts.
 - Question and answer image groups can be reordered in CMS.
+- Question and answer images can be uploaded without leaving the Assignment form.
 - Public users can browse and search without logging in.
 - Images render in the configured order.
 - Images over 5 MB are rejected by both client and Payload validation.
@@ -172,10 +180,12 @@ Implemented in the initial codebase:
 
 - Next.js App Router public site and Payload Admin Panel in one deployment
 - Username/password Payload authentication with student, moderator, and admin roles
-- Academic year, major, reusable subject, semester-subject, media, and assignment collections
+- Academic year, major, study year, reusable subject, semester-subject, hidden media, and
+  assignment collections
 - Public metadata filters and published-assignment detail pages
 - Ordered question and answer image groups
-- Signed browser-to-Cloudinary uploads with client and server-side 5 MB validation
+- Signed browser-to-Cloudinary uploads directly inside Assignment, with client and server-side
+  5 MB validation
 - shadcn/ui, Tailwind CSS v4, pnpm, Commitlint, lint-staged, and Husky hooks
 
 Environment-dependent completion steps:

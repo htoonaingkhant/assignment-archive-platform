@@ -64,16 +64,28 @@ export const Assignments: CollectionConfig = {
       name: 'questionImages',
       type: 'array',
       admin: {
-        description: 'Drag rows to arrange the question pages in reading order.',
+        description:
+          'Add a row for each question page, upload the image here, then drag rows into reading order.',
       },
       fields: [
         {
+          name: 'directUpload',
+          type: 'ui',
+          admin: {
+            components: {
+              Field: '@/components/admin/AssignmentImageUploader#AssignmentImageUploader',
+            },
+          },
+        },
+        {
           name: 'image',
           type: 'relationship',
+          admin: { hidden: true },
           relationTo: 'media',
           required: true,
         },
       ],
+      labels: { plural: 'Question pages', singular: 'Question page' },
       minRows: 1,
       required: true,
     },
@@ -81,16 +93,28 @@ export const Assignments: CollectionConfig = {
       name: 'answerImages',
       type: 'array',
       admin: {
-        description: 'Drag rows to arrange the answer pages in reading order.',
+        description:
+          'Add a row for each answer page, upload the image here, then drag rows into reading order.',
       },
       fields: [
         {
+          name: 'directUpload',
+          type: 'ui',
+          admin: {
+            components: {
+              Field: '@/components/admin/AssignmentImageUploader#AssignmentImageUploader',
+            },
+          },
+        },
+        {
           name: 'image',
           type: 'relationship',
+          admin: { hidden: true },
           relationTo: 'media',
           required: true,
         },
       ],
+      labels: { plural: 'Answer pages', singular: 'Answer page' },
       minRows: 1,
       required: true,
     },

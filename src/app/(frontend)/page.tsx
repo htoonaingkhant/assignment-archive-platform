@@ -21,6 +21,7 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
     major: getParam(params.major),
     query: getParam(params.q),
     semester: getParam(params.semester),
+    studyYear: getParam(params.studyYear),
     subject: getParam(params.subject),
   }
   const data = await getBrowseData(filters)
@@ -50,8 +51,8 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
               Assignment answers that don&apos;t disappear in chat history.
             </h1>
             <p className="mt-6 max-w-2xl text-pretty text-lg leading-8 text-muted-foreground">
-              Browse reviewed question and answer pages by academic year, major, semester, and
-              subject—without digging through old Telegram or Discord messages.
+              Browse reviewed question and answer pages by academic year, major, study year,
+              semester, and subject—without digging through old Telegram or Discord messages.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
@@ -95,7 +96,7 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
           </p>
         </div>
         <form
-          className="mb-8 grid gap-3 rounded-2xl border bg-card p-4 shadow-sm md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,1fr)_auto]"
+          className="mb-8 grid gap-3 rounded-2xl border bg-card p-4 shadow-sm md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[1.4fr_repeat(5,1fr)_auto]"
           method="GET"
         >
           <div className="relative">
@@ -142,6 +143,18 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
             <option value="">Both semesters</option>
             <option value="first">First semester</option>
             <option value="second">Second semester</option>
+          </select>
+          <select
+            className="h-9 rounded-md border bg-background px-3 text-sm"
+            defaultValue={filters.studyYear ?? ''}
+            name="studyYear"
+          >
+            <option value="">All study years</option>
+            {data.studyYears.map((studyYear) => (
+              <option key={studyYear.id} value={studyYear.id}>
+                {studyYear.name}
+              </option>
+            ))}
           </select>
           <select
             className="h-9 rounded-md border bg-background px-3 text-sm"

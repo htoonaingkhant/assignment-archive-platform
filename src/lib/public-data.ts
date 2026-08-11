@@ -6,6 +6,7 @@ import type {
   Major,
   Media,
   SemesterSubject,
+  StudyYear,
   Subject,
 } from '@/payload-types'
 import config from '@/payload.config'
@@ -15,6 +16,7 @@ export type BrowseFilters = {
   major?: string
   query?: string
   semester?: string
+  studyYear?: string
   subject?: string
 }
 
@@ -23,6 +25,7 @@ export type BrowseData = {
   assignments: Assignment[]
   available: boolean
   majors: Major[]
+  studyYears: StudyYear[]
   subjects: Subject[]
 }
 
@@ -34,9 +37,10 @@ export const getAssignmentContext = (assignment: Assignment) => {
   const semesterSubject = asDocument<SemesterSubject>(assignment.semesterSubject)
   const academicYear = asDocument<AcademicYear>(semesterSubject?.academicYear)
   const major = asDocument<Major>(semesterSubject?.major)
+  const studyYear = asDocument<StudyYear>(semesterSubject?.studyYear)
   const subject = asDocument<Subject>(semesterSubject?.subject)
 
-  return { academicYear, major, semesterSubject, subject }
+  return { academicYear, major, semesterSubject, studyYear, subject }
 }
 
 export const getMediaDocument = (value: number | Media): Media | null => {
@@ -45,14 +49,21 @@ export const getMediaDocument = (value: number | Media): Media | null => {
 
 export const getBrowseData = async (filters: BrowseFilters): Promise<BrowseData> => {
   if (!process.env.DATABASE_URL) {
-    return { academicYears: [], assignments: [], available: false, majors: [], subjects: [] }
+    return {
+      academicYears: [],
+      assignments: [],
+      available: false,
+      majors: [],
+      studyYears: [],
+      subjects: [],
+    }
   }
 
   try {
     const payload = await getPayload({ config })
     const titleFilter = filters.query?.trim()
 
-    const [academicYears, majors, subjects, assignments] = await Promise.all([
+    const [academicYears, majors, studyYears, subjects, assignments] = await Promise.all([
       payload.find({
         collection: 'academic-years',
         limit: 100,
@@ -60,6 +71,12 @@ export const getBrowseData = async (filters: BrowseFilters): Promise<BrowseData>
         sort: '-name',
       }),
       payload.find({ collection: 'majors', limit: 100, overrideAccess: false, sort: 'name' }),
+      payload.find({
+        collection: 'study-years',
+        limit: 100,
+        overrideAccess: false,
+        sort: 'sortOrder',
+      }),
       payload.find({ collection: 'subjects', limit: 250, overrideAccess: false, sort: 'code' }),
       payload.find({
         collection: 'assignments',
@@ -83,6 +100,7 @@ export const getBrowseData = async (filters: BrowseFilters): Promise<BrowseData>
         return false
       }
       if (filters.major && String(context.major?.id) !== filters.major) return false
+      if (filters.studyYear && String(context.studyYear?.id) !== filters.studyYear) return false
       if (filters.semester && context.semesterSubject?.semester !== filters.semester) return false
       if (filters.subject && String(context.subject?.id) !== filters.subject) return false
 
@@ -102,10 +120,18 @@ export const getBrowseData = async (filters: BrowseFilters): Promise<BrowseData>
       assignments: filteredAssignments,
       available: true,
       majors: majors.docs,
+      studyYears: studyYears.docs,
       subjects: subjects.docs,
     }
   } catch {
-    return { academicYears: [], assignments: [], available: false, majors: [], subjects: [] }
+    return {
+      academicYears: [],
+      assignments: [],
+      available: false,
+      majors: [],
+      studyYears: [],
+      subjects: [],
+    }
   }
 }
 
