@@ -187,6 +187,8 @@ Implemented in the initial codebase:
 - Signed browser-to-Cloudinary uploads directly inside Assignment, with client and server-side
   5 MB validation
 - shadcn/ui, Tailwind CSS v4, pnpm, Commitlint, lint-staged, and Husky hooks
+- Retro mobile-first public/auth website design, client-side search navigation, and automatic
+  select filtering (see `docs/implementation/retro-website-design.md`)
 
 Environment-dependent completion steps:
 
