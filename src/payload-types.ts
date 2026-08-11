@@ -59,132 +59,131 @@ export type SupportedTimezones =
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
   | 'Pacific/Auckland'
-  | 'Pacific/Fiji'
+  | 'Pacific/Fiji';
 
 export interface Config {
   auth: {
-    users: UserAuthOperations
-  }
-  blocks: {}
+    users: UserAuthOperations;
+  };
+  blocks: {};
   collections: {
-    users: User
-    'academic-years': AcademicYear
-    majors: Major
-    'study-years': StudyYear
-    subjects: Subject
-    'semester-subjects': SemesterSubject
-    media: Media
-    assignments: Assignment
-    'payload-kv': PayloadKv
-    'payload-locked-documents': PayloadLockedDocument
-    'payload-preferences': PayloadPreference
-    'payload-migrations': PayloadMigration
-  }
-  collectionsJoins: {}
+    users: User;
+    'academic-years': AcademicYear;
+    majors: Major;
+    'study-years': StudyYear;
+    subjects: Subject;
+    'semester-subjects': SemesterSubject;
+    media: Media;
+    assignments: Assignment;
+    'payload-kv': PayloadKv;
+    'payload-locked-documents': PayloadLockedDocument;
+    'payload-preferences': PayloadPreference;
+    'payload-migrations': PayloadMigration;
+  };
+  collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>
-    'academic-years': AcademicYearsSelect<false> | AcademicYearsSelect<true>
-    majors: MajorsSelect<false> | MajorsSelect<true>
-    'study-years': StudyYearsSelect<false> | StudyYearsSelect<true>
-    subjects: SubjectsSelect<false> | SubjectsSelect<true>
-    'semester-subjects': SemesterSubjectsSelect<false> | SemesterSubjectsSelect<true>
-    media: MediaSelect<false> | MediaSelect<true>
-    assignments: AssignmentsSelect<false> | AssignmentsSelect<true>
-    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>
-    'payload-locked-documents':
-      PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>
-  }
+    users: UsersSelect<false> | UsersSelect<true>;
+    'academic-years': AcademicYearsSelect<false> | AcademicYearsSelect<true>;
+    majors: MajorsSelect<false> | MajorsSelect<true>;
+    'study-years': StudyYearsSelect<false> | StudyYearsSelect<true>;
+    subjects: SubjectsSelect<false> | SubjectsSelect<true>;
+    'semester-subjects': SemesterSubjectsSelect<false> | SemesterSubjectsSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    assignments: AssignmentsSelect<false> | AssignmentsSelect<true>;
+    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
+  };
   db: {
-    defaultIDType: number
-  }
-  fallbackLocale: null
-  globals: {}
-  globalsSelect: {}
-  locale: null
+    defaultIDType: number;
+  };
+  fallbackLocale: null;
+  globals: {};
+  globalsSelect: {};
+  locale: null;
   widgets: {
-    collections: CollectionsWidget
-  }
-  user: User
+    collections: CollectionsWidget;
+  };
+  user: User;
   jobs: {
-    tasks: unknown
-    workflows: unknown
-  }
+    tasks: unknown;
+    workflows: unknown;
+  };
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    username: string
-  }
+    username: string;
+  };
   login: {
-    password: string
-    username: string
-  }
+    password: string;
+    username: string;
+  };
   registerFirstUser: {
-    password: string
-    username: string
-  }
+    password: string;
+    username: string;
+  };
   unlock: {
-    username: string
-  }
+    username: string;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: number
-  role: 'student' | 'moderator' | 'admin'
-  updatedAt: string
-  createdAt: string
-  email?: string | null
-  username: string
-  resetPasswordToken?: string | null
-  resetPasswordExpiration?: string | null
-  salt?: string | null
-  hash?: string | null
-  loginAttempts?: number | null
-  lockUntil?: string | null
+  id: number;
+  role: 'student' | 'moderator' | 'admin';
+  updatedAt: string;
+  createdAt: string;
+  email?: string | null;
+  username: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
   sessions?:
     | {
-        id: string
-        createdAt?: string | null
-        expiresAt: string
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
       }[]
-    | null
-  password?: string | null
-  collection: 'users'
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "academic-years".
  */
 export interface AcademicYear {
-  id: number
+  id: number;
   /**
    * The calendar-based school period only, for example 2026–2027. First Year and Second Year are selected later in Semester Subjects.
    */
-  name: string
-  isActive?: boolean | null
-  updatedAt: string
-  createdAt: string
+  name: string;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "majors".
  */
 export interface Major {
-  id: number
+  id: number;
   /**
    * The reusable major name only, for example Mathematics. Do not include First Year or Second Year here.
    */
-  name: string
+  name: string;
   /**
    * Optional short code, for example MATH.
    */
-  code?: string | null
-  updatedAt: string
-  createdAt: string
+  code?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Student levels inside a major, such as First Year, Second Year, or Honours Year.
@@ -193,355 +192,355 @@ export interface Major {
  * via the `definition` "study-years".
  */
 export interface StudyYear {
-  id: number
-  name: string
+  id: number;
+  name: string;
   /**
    * Controls display order. Example: First Year = 1, Second Year = 2.
    */
-  sortOrder: number
-  updatedAt: string
-  createdAt: string
+  sortOrder: number;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "subjects".
  */
 export interface Subject {
-  id: number
-  code: string
-  name: string
-  updatedAt: string
-  createdAt: string
+  id: number;
+  code: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "semester-subjects".
  */
 export interface SemesterSubject {
-  id: number
-  displayName?: string | null
+  id: number;
+  displayName?: string | null;
   /**
    * Calendar period, for example 2026–2027.
    */
-  academicYear: number | AcademicYear
+  academicYear: number | AcademicYear;
   /**
    * Major only, for example Mathematics.
    */
-  major: number | Major
+  major: number | Major;
   /**
    * The student level inside this major and academic year, for example First Year Mathematics.
    */
-  studyYear: number | StudyYear
-  semester: 'first' | 'second'
-  subject: number | Subject
-  updatedAt: string
-  createdAt: string
+  studyYear: number | StudyYear;
+  semester: 'first' | 'second';
+  subject: number | Subject;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: number
-  alt: string
-  cloudinaryPublicId: string
-  secureUrl: string
-  originalFilename?: string | null
-  mimeType?: string | null
-  format?: string | null
-  bytes?: number | null
-  width?: number | null
-  height?: number | null
-  updatedAt: string
-  createdAt: string
+  id: number;
+  alt: string;
+  cloudinaryPublicId: string;
+  secureUrl: string;
+  originalFilename?: string | null;
+  mimeType?: string | null;
+  format?: string | null;
+  bytes?: number | null;
+  width?: number | null;
+  height?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "assignments".
  */
 export interface Assignment {
-  id: number
-  title: string
-  semesterSubject: number | SemesterSubject
-  status: 'draft' | 'published'
+  id: number;
+  title: string;
+  semesterSubject: number | SemesterSubject;
+  status: 'draft' | 'published';
   /**
    * Add a row for each question page, upload the image here, then drag rows into reading order.
    */
   questionImages: {
-    image: number | Media
-    id?: string | null
-  }[]
+    image: number | Media;
+    id?: string | null;
+  }[];
   /**
    * Add a row for each answer page, upload the image here, then drag rows into reading order.
    */
   answerImages: {
-    image: number | Media
-    id?: string | null
-  }[]
-  createdBy?: (number | null) | User
-  publishedBy?: (number | null) | User
-  publishedAt?: string | null
-  updatedAt: string
-  createdAt: string
+    image: number | Media;
+    id?: string | null;
+  }[];
+  createdBy?: (number | null) | User;
+  publishedBy?: (number | null) | User;
+  publishedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: number
-  key: string
+  id: number;
+  key: string;
   data:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
+    | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number
+  id: number;
   document?:
     | ({
-        relationTo: 'users'
-        value: number | User
+        relationTo: 'users';
+        value: number | User;
       } | null)
     | ({
-        relationTo: 'academic-years'
-        value: number | AcademicYear
+        relationTo: 'academic-years';
+        value: number | AcademicYear;
       } | null)
     | ({
-        relationTo: 'majors'
-        value: number | Major
+        relationTo: 'majors';
+        value: number | Major;
       } | null)
     | ({
-        relationTo: 'study-years'
-        value: number | StudyYear
+        relationTo: 'study-years';
+        value: number | StudyYear;
       } | null)
     | ({
-        relationTo: 'subjects'
-        value: number | Subject
+        relationTo: 'subjects';
+        value: number | Subject;
       } | null)
     | ({
-        relationTo: 'semester-subjects'
-        value: number | SemesterSubject
+        relationTo: 'semester-subjects';
+        value: number | SemesterSubject;
       } | null)
     | ({
-        relationTo: 'media'
-        value: number | Media
+        relationTo: 'media';
+        value: number | Media;
       } | null)
     | ({
-        relationTo: 'assignments'
-        value: number | Assignment
-      } | null)
-  globalSlug?: string | null
+        relationTo: 'assignments';
+        value: number | Assignment;
+      } | null);
+  globalSlug?: string | null;
   user: {
-    relationTo: 'users'
-    value: number | User
-  }
-  updatedAt: string
-  createdAt: string
+    relationTo: 'users';
+    value: number | User;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number
+  id: number;
   user: {
-    relationTo: 'users'
-    value: number | User
-  }
-  key?: string | null
+    relationTo: 'users';
+    value: number | User;
+  };
+  key?: string | null;
   value?:
     | {
-        [k: string]: unknown
+        [k: string]: unknown;
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null
-  updatedAt: string
-  createdAt: string
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number
-  name?: string | null
-  batch?: number | null
-  updatedAt: string
-  createdAt: string
+  id: number;
+  name?: string | null;
+  batch?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  role?: T
-  updatedAt?: T
-  createdAt?: T
-  email?: T
-  username?: T
-  resetPasswordToken?: T
-  resetPasswordExpiration?: T
-  salt?: T
-  hash?: T
-  loginAttempts?: T
-  lockUntil?: T
+  role?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  username?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
   sessions?:
     | T
     | {
-        id?: T
-        createdAt?: T
-        expiresAt?: T
-      }
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "academic-years_select".
  */
 export interface AcademicYearsSelect<T extends boolean = true> {
-  name?: T
-  isActive?: T
-  updatedAt?: T
-  createdAt?: T
+  name?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "majors_select".
  */
 export interface MajorsSelect<T extends boolean = true> {
-  name?: T
-  code?: T
-  updatedAt?: T
-  createdAt?: T
+  name?: T;
+  code?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "study-years_select".
  */
 export interface StudyYearsSelect<T extends boolean = true> {
-  name?: T
-  sortOrder?: T
-  updatedAt?: T
-  createdAt?: T
+  name?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "subjects_select".
  */
 export interface SubjectsSelect<T extends boolean = true> {
-  code?: T
-  name?: T
-  updatedAt?: T
-  createdAt?: T
+  code?: T;
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "semester-subjects_select".
  */
 export interface SemesterSubjectsSelect<T extends boolean = true> {
-  displayName?: T
-  academicYear?: T
-  major?: T
-  studyYear?: T
-  semester?: T
-  subject?: T
-  updatedAt?: T
-  createdAt?: T
+  displayName?: T;
+  academicYear?: T;
+  major?: T;
+  studyYear?: T;
+  semester?: T;
+  subject?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  alt?: T
-  cloudinaryPublicId?: T
-  secureUrl?: T
-  originalFilename?: T
-  mimeType?: T
-  format?: T
-  bytes?: T
-  width?: T
-  height?: T
-  updatedAt?: T
-  createdAt?: T
+  alt?: T;
+  cloudinaryPublicId?: T;
+  secureUrl?: T;
+  originalFilename?: T;
+  mimeType?: T;
+  format?: T;
+  bytes?: T;
+  width?: T;
+  height?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "assignments_select".
  */
 export interface AssignmentsSelect<T extends boolean = true> {
-  title?: T
-  semesterSubject?: T
-  status?: T
+  title?: T;
+  semesterSubject?: T;
+  status?: T;
   questionImages?:
     | T
     | {
-        image?: T
-        id?: T
-      }
+        image?: T;
+        id?: T;
+      };
   answerImages?:
     | T
     | {
-        image?: T
-        id?: T
-      }
-  createdBy?: T
-  publishedBy?: T
-  publishedAt?: T
-  updatedAt?: T
-  createdAt?: T
+        image?: T;
+        id?: T;
+      };
+  createdBy?: T;
+  publishedBy?: T;
+  publishedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
-  key?: T
-  data?: T
+  key?: T;
+  data?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T
-  globalSlug?: T
-  user?: T
-  updatedAt?: T
-  createdAt?: T
+  document?: T;
+  globalSlug?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T
-  key?: T
-  value?: T
-  updatedAt?: T
-  createdAt?: T
+  user?: T;
+  key?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T
-  batch?: T
-  updatedAt?: T
-  createdAt?: T
+  name?: T;
+  batch?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -549,17 +548,18 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface CollectionsWidget {
   data?: {
-    [k: string]: unknown
-  }
-  width: 'full'
+    [k: string]: unknown;
+  };
+  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown
+  [k: string]: unknown;
 }
+
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}
