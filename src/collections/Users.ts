@@ -1,6 +1,6 @@
 import type { CollectionBeforeChangeHook, CollectionConfig, PayloadRequest } from 'payload'
 
-import { isAdmin, ownRecordOrAdmin } from '@/access/roles'
+import { isAdmin } from '@/access/roles'
 
 const hasNoUsers = async (req: PayloadRequest) => {
   const result = await req.payload.count({
@@ -12,16 +12,42 @@ const hasNoUsers = async (req: PayloadRequest) => {
   return result.totalDocs === 0
 }
 
+/**
+ * Payload normally includes `role` in the authenticated user because the field is saved to JWT.
+ * The database fallback also handles sessions issued before a role change or a custom auth flow
+ * that returns only the base user fields.
+ */
+const canManageUsers = async (req: PayloadRequest) => {
+  if (isAdmin(req.user)) return true
+  if (!req.user?.id) return false
+
+  try {
+    const currentUser = await req.payload.findByID({
+      collection: 'users',
+      depth: 0,
+      id: req.user.id,
+      overrideAccess: true,
+      req,
+    })
+
+    return isAdmin(currentUser)
+  } catch {
+    return false
+  }
+}
+
 const enforceRole: CollectionBeforeChangeHook = async ({ data, operation, originalDoc, req }) => {
+  const canManage = await canManageUsers(req)
+
   if (operation === 'create') {
     if (await hasNoUsers(req)) {
       data.role = 'admin'
-    } else if (!isAdmin(req.user)) {
+    } else if (!canManage) {
       data.role = 'student'
     }
   }
 
-  if (operation === 'update' && !isAdmin(req.user)) {
+  if (operation === 'update' && !canManage) {
     data.role = originalDoc?.role ?? 'student'
   }
 
@@ -36,12 +62,11 @@ export const Users: CollectionConfig = {
     useAsTitle: 'username',
   },
   access: {
-    admin: async ({ req }) =>
-      isAdmin(req.user) || req.user?.role === 'moderator' || (await hasNoUsers(req)),
-    create: async ({ req }) => isAdmin(req.user) || (await hasNoUsers(req)),
-    delete: ({ req }) => isAdmin(req.user),
-    read: ownRecordOrAdmin,
-    update: ownRecordOrAdmin,
+    admin: async ({ req }) => (await canManageUsers(req)) || (await hasNoUsers(req)),
+    create: async ({ req }) => (await canManageUsers(req)) || (await hasNoUsers(req)),
+    delete: async ({ req }) => canManageUsers(req),
+    read: async ({ req }) => canManageUsers(req),
+    update: async ({ req }) => canManageUsers(req),
   },
   auth: {
     lockTime: 10 * 60 * 1000,
@@ -59,8 +84,8 @@ export const Users: CollectionConfig = {
       name: 'role',
       type: 'select',
       access: {
-        create: async ({ req }) => isAdmin(req.user) || (await hasNoUsers(req)),
-        update: ({ req }) => isAdmin(req.user),
+        create: async ({ req }) => (await canManageUsers(req)) || (await hasNoUsers(req)),
+        update: async ({ req }) => canManageUsers(req),
       },
       defaultValue: 'student',
       options: [

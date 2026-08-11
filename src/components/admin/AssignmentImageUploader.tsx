@@ -27,6 +27,7 @@ export function AssignmentImageUploader({ path }: { path: string }) {
   const imageField = useField<RelationshipValue>({ path: imagePath })
   const imageID = getRelationshipID(imageField.value)
   const [alt, setAlt] = useState('')
+  const [descriptionError, setDescriptionError] = useState('')
   const [preview, setPreview] = useState<MediaResponse | null>(null)
   const [uploading, setUploading] = useState(false)
 
@@ -58,17 +59,21 @@ export function AssignmentImageUploader({ path }: { path: string }) {
     event.target.value = ''
     if (!file) return
 
-    if (!alt.trim()) {
-      toast.error('Add a short image description before choosing the file.')
+    const description = alt.trim()
+    if (description.length < 3) {
+      const message = 'Image description is required and must be at least 3 characters.'
+      setDescriptionError(message)
+      toast.error(message)
       return
     }
 
+    setDescriptionError('')
     setUploading(true)
     try {
       const asset = await uploadImageToCloudinary(file)
       const mediaRequest = await fetch('/api/assignment-media', {
         body: JSON.stringify({
-          alt: alt.trim(),
+          alt: description,
           bytes: asset.bytes,
           cloudinaryPublicId: asset.public_id,
           format: asset.format,
@@ -136,14 +141,37 @@ export function AssignmentImageUploader({ path }: { path: string }) {
             </p>
           </div>
           <label htmlFor={`${path}-alt`} style={{ display: 'grid', gap: 6 }}>
-            <span>Image description</span>
+            <span>
+              Image description <strong aria-hidden="true">*</strong> <small>(required)</small>
+            </span>
             <input
+              aria-describedby={descriptionError ? `${path}-alt-error` : undefined}
+              aria-invalid={Boolean(descriptionError)}
+              aria-required="true"
               id={`${path}-alt`}
-              onChange={(event) => setAlt(event.target.value)}
+              maxLength={160}
+              minLength={3}
+              onChange={(event) => {
+                const value = event.target.value
+                setAlt(value)
+                if (value.trim().length >= 3) setDescriptionError('')
+              }}
               placeholder="Example: Mathematics 2101 question page 1"
+              required
               type="text"
               value={alt}
             />
+            {descriptionError ? (
+              <span
+                id={`${path}-alt-error`}
+                role="alert"
+                style={{ color: 'var(--theme-error-500)' }}
+              >
+                {descriptionError}
+              </span>
+            ) : (
+              <small>Required to save and attach this image.</small>
+            )}
           </label>
           <label
             className="btn btn--style-primary btn--size-medium"
