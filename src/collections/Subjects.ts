@@ -1,6 +1,28 @@
-import type { CollectionConfig } from 'payload'
+import { APIError, type CollectionBeforeDeleteHook, type CollectionConfig } from 'payload'
 
 import { adminOnly, publicRead } from '@/access/roles'
+
+const preventDeleteWhenInUse: CollectionBeforeDeleteHook = async ({ id, req }) => {
+  const { totalDocs } = await req.payload.count({
+    collection: 'semester-subjects',
+    overrideAccess: true,
+    req,
+    where: {
+      subject: {
+        equals: id,
+      },
+    },
+  })
+
+  if (totalDocs > 0) {
+    throw new APIError(
+      `This subject is used by ${totalDocs} semester subject${totalDocs === 1 ? '' : 's'}. Delete those semester-subject records first.`,
+      409,
+      undefined,
+      true,
+    )
+  }
+}
 
 export const Subjects: CollectionConfig = {
   slug: 'subjects',
@@ -16,6 +38,9 @@ export const Subjects: CollectionConfig = {
     update: adminOnly,
   },
   defaultSort: 'code',
+  hooks: {
+    beforeDelete: [preventDeleteWhenInUse],
+  },
   fields: [
     {
       name: 'code',

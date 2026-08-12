@@ -1,4 +1,9 @@
-import type { CollectionBeforeChangeHook, CollectionConfig } from 'payload'
+import {
+  APIError,
+  type CollectionBeforeChangeHook,
+  type CollectionBeforeDeleteHook,
+  type CollectionConfig,
+} from 'payload'
 
 import { adminOnly, publicRead } from '@/access/roles'
 
@@ -30,6 +35,28 @@ const setDisplayName: CollectionBeforeChangeHook = async ({ data, req }) => {
   return data
 }
 
+const preventDeleteWhenInUse: CollectionBeforeDeleteHook = async ({ id, req }) => {
+  const { totalDocs } = await req.payload.count({
+    collection: 'assignments',
+    overrideAccess: true,
+    req,
+    where: {
+      semesterSubject: {
+        equals: id,
+      },
+    },
+  })
+
+  if (totalDocs > 0) {
+    throw new APIError(
+      `This semester subject is used by ${totalDocs} assignment${totalDocs === 1 ? '' : 's'}. Delete those assignments first.`,
+      409,
+      undefined,
+      true,
+    )
+  }
+}
+
 export const SemesterSubjects: CollectionConfig = {
   slug: 'semester-subjects',
   admin: {
@@ -51,6 +78,7 @@ export const SemesterSubjects: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [setDisplayName],
+    beforeDelete: [preventDeleteWhenInUse],
   },
   fields: [
     {
