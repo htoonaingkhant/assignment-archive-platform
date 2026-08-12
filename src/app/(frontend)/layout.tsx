@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import React from 'react'
 import { Toaster } from 'sonner'
+import { Analytics } from '@vercel/analytics/next'
 
 import { SiteHeader } from '@/components/site/SiteHeader'
 import './styles.css'
@@ -100,6 +101,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </footer>
         <Toaster richColors />
+
+        <Analytics />
       </body>
     </html>
   )
