@@ -32,10 +32,25 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
   description: siteConfig.description,
+  icons: {
+    icon: [
+      { rel: 'icon', type: 'image/x-icon', url: '/favicon.ico' },
+      { rel: 'icon', sizes: '16x16', type: 'image/png', url: '/favicon-16x16.png' },
+    ],
+    apple: [{ rel: 'apple-touch-icon', sizes: '180x180', url: '/apple-touch-icon.png' }],
+  },
   keywords: siteConfig.keywords,
   metadataBase: new URL(siteConfig.url),
   openGraph: {
     description: siteConfig.shortDescription,
+    images: [
+      {
+        alt: `${siteConfig.name} — ${siteConfig.tagline}`,
+        height: 630,
+        url: '/og-image.png',
+        width: 1200,
+      },
+    ],
     locale: 'en_US',
     siteName: siteConfig.name,
     title: siteConfig.name,
@@ -61,6 +76,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     creator: '@assignmentarchive',
     description: siteConfig.shortDescription,
+    images: ['/og-image.png'],
     title: siteConfig.name,
   },
   verification: {

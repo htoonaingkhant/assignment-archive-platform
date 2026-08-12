@@ -1,0 +1,23 @@
+<svg width="180" height="180" xmlns="http://www.w3.org/2000/svg">
+  <!-- Orange background -->
+  <rect width="180" height="180" fill="#FF6B35"/>
+  
+  <!-- Black border -->
+  <rect x="0" y="0" width="180" height="180" fill="none" stroke="#0F0F0F" stroke-width="6"/>
+  
+  <!-- Book icon - cleaner design -->
+  <g transform="translate(40, 50)">
+    <!-- Left page -->
+    <rect x="10" y="10" width="40" height="60" fill="#FAF5EE" stroke="#0F0F0F" stroke-width="4"/>
+    <!-- Right page -->
+    <rect x="50" y="10" width="40" height="60" fill="#FAF5EE" stroke="#0F0F0F" stroke-width="4"/>
+    <!-- Center spine -->
+    <line x1="50" y1="10" x2="50" y2="70" stroke="#0F0F0F" stroke-width="4"/>
+    <!-- Lines on left page -->
+    <line x1="18" y1="25" x2="42" y2="25" stroke="#0F0F0F" stroke-width="2"/>
+    <line x1="18" y1="35" x2="42" y2="35" stroke="#0F0F0F" stroke-width="2"/>
+    <!-- Lines on right page -->
+    <line x1="58" y1="25" x2="82" y2="25" stroke="#0F0F0F" stroke-width="2"/>
+    <line x1="58" y1="35" x2="82" y2="35" stroke="#0F0F0F" stroke-width="2"/>
+  </g>
+</svg>
