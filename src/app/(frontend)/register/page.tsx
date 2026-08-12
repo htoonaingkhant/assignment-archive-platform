@@ -20,7 +20,7 @@ export default function RegisterPage() {
           </p>
           <CardTitle className="retro-display text-4xl leading-none">Create an account</CardTitle>
           <CardDescription className="mt-2 font-medium">
-            Email is not required. Choose a unique username and password.
+            Enter your username and password.
           </CardDescription>
         </CardHeader>
         <CardContent className="px-5 sm:px-7">

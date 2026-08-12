@@ -5,22 +5,68 @@ import { Toaster } from 'sonner'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import './styles.css'
 
-export const metadata: Metadata = {
+const siteConfig = {
   description:
-    'A searchable, moderated archive of assignment questions and verified image-based solutions.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+    'A searchable, moderated archive of assignment questions and verified image-based solutions. Find reviewed assignments organized by academic year, major, semester, and subject.',
+  keywords: [
+    'assignment archive',
+    'past papers',
+    'assignment solutions',
+    'academic resources',
+    'study materials',
+    'assignment questions',
+    'verified solutions',
+    'university assignments',
+    'college assignments',
+    'exam preparation',
+  ],
+  name: 'Assignment Archive',
+  shortDescription:
+    'Find reviewed assignment questions and image-based solutions by year, major, semester, and subject.',
+  tagline: 'Answers that stay findable',
+  url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+}
+
+export const metadata: Metadata = {
+  applicationName: siteConfig.name,
+  authors: [{ name: siteConfig.name }],
+  creator: siteConfig.name,
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  metadataBase: new URL(siteConfig.url),
   openGraph: {
-    description:
-      'Find reviewed assignment questions and image-based solutions by year, major, semester, and subject.',
-    images: ['/assignment-archive-social.png'],
-    title: 'Assignment Archive',
+    description: siteConfig.shortDescription,
+    locale: 'en_US',
+    siteName: siteConfig.name,
+    title: siteConfig.name,
     type: 'website',
+    url: siteConfig.url,
   },
-  title: { default: 'Assignment Archive', template: '%s · Assignment Archive' },
+  robots: {
+    follow: true,
+    googleBot: {
+      follow: true,
+      index: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+    index: true,
+  },
+  title: {
+    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    template: `%s · ${siteConfig.name}`,
+  },
   twitter: {
     card: 'summary_large_image',
-    images: ['/assignment-archive-social.png'],
-    title: 'Assignment Archive',
+    creator: '@assignmentarchive',
+    description: siteConfig.shortDescription,
+    title: siteConfig.name,
+  },
+  verification: {
+    // Add your verification tokens when available
+    // google: 'your-google-verification-token',
+    // yandex: 'your-yandex-verification-token',
   },
 }
 
