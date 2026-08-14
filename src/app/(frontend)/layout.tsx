@@ -6,6 +6,22 @@ import { Analytics } from '@vercel/analytics/next'
 import { SiteHeader } from '@/components/site/SiteHeader'
 import './styles.css'
 
+const normalizeSiteUrl = (url: string) => {
+  const withProtocol = /^https?:\/\//i.test(url) ? url : `https://${url}`
+
+  return withProtocol.replace(/\/$/, '')
+}
+
+const siteUrl = normalizeSiteUrl(
+  process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+    process.env.VERCEL_URL ||
+    'http://localhost:3000',
+)
+
+// Keep this versioned so social crawlers do not reuse a previously cached, missing preview image.
+const socialImageUrl = `${siteUrl}/og-image.png?v=20260814`
+
 const siteConfig = {
   description:
     'A searchable, moderated archive of assignment questions and verified image-based solutions. Find reviewed assignments organized by academic year, major, semester, and subject.',
@@ -25,10 +41,13 @@ const siteConfig = {
   shortDescription:
     'Find reviewed assignment questions and image-based solutions by year, major, semester, and subject.',
   tagline: 'Answers that stay findable',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  url: siteUrl,
 }
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: siteConfig.url,
+  },
   applicationName: siteConfig.name,
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,
@@ -48,7 +67,9 @@ export const metadata: Metadata = {
       {
         alt: `${siteConfig.name} — ${siteConfig.tagline}`,
         height: 630,
-        url: '/og-image.png',
+        secureUrl: socialImageUrl,
+        type: 'image/png',
+        url: socialImageUrl,
         width: 1200,
       },
     ],
@@ -77,7 +98,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     creator: '@assignmentarchive',
     description: siteConfig.shortDescription,
-    images: ['/og-image.png'],
+    images: [{ alt: `${siteConfig.name} — ${siteConfig.tagline}`, url: socialImageUrl }],
     title: siteConfig.name,
   },
   verification: {
