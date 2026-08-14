@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     ],
     locale: 'en_US',
     siteName: siteConfig.name,
-    title: siteConfig.name,
+    title: siteConfig.tagline,
     type: 'website',
     url: siteConfig.url,
   },
@@ -99,7 +99,7 @@ export const metadata: Metadata = {
     creator: '@assignmentarchive',
     description: siteConfig.shortDescription,
     images: [{ alt: `${siteConfig.name} — ${siteConfig.tagline}`, url: socialImageUrl }],
-    title: siteConfig.name,
+    title: siteConfig.tagline,
   },
   verification: {
     // Add your verification tokens when available
